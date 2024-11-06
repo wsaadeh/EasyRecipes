@@ -1,4 +1,4 @@
-package com.saadeh.easyrecipes
+package com.saadeh.easyrecipes.common.model
 
 data class RecipeDto(
     val id: Int,

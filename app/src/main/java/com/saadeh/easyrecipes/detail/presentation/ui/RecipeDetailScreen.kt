@@ -1,6 +1,5 @@
-package com.saadeh.easyrecipes
+package com.saadeh.easyrecipes.detail.presentation.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,42 +12,28 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.saadeh.easyrecipes.designsystem.components.ERHtmlText
+import com.saadeh.easyrecipes.common.model.RecipeDto
+import com.saadeh.easyrecipes.detail.presentation.RecipeDetailViewModel
+
 
 @Composable
-fun RecipeDetailScreen(id: String, navHostController: NavHostController) {
+fun RecipeDetailScreen(
+    id: String,
+    navHostController: NavHostController,
+    viewModel: RecipeDetailViewModel) {
 
-    val service = RetrofitClient.retrofitInstance.create(ApiService::class.java)
-    var recipeDto by remember { mutableStateOf<RecipeDto?>(null) }
+    val recipeDto = viewModel.uiRecipeDetailById.collectAsState()
+    viewModel.fetchRecipeById(id)
 
-    service.getRecipeInformation(id).enqueue(object: Callback<RecipeDto> {
-        override fun onResponse(call: Call<RecipeDto>, response: Response<RecipeDto>) {
-            if (response.isSuccessful){
-                recipeDto = response.body()
-            } else {
-                Log.d("RecipeDetailScreen", "Request error :: ${response.errorBody()}")
-            }
-        }
-
-        override fun onFailure(call: Call<RecipeDto>, t: Throwable) {
-            Log.d("RecipeDetailScreen","Network error :: ${t.message}")
-        }
-
-    })
-
-    recipeDto?.let {
+    recipeDto.value?.let {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {

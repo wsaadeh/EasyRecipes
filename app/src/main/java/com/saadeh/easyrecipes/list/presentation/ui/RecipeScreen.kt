@@ -1,6 +1,5 @@
-package com.saadeh.easyrecipes
+package com.saadeh.easyrecipes.list.presentation.ui
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,10 +14,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,35 +28,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.saadeh.easyrecipes.common.model.RecipeDto
+import com.saadeh.easyrecipes.designsystem.components.ERHtmlText
+import com.saadeh.easyrecipes.designsystem.components.ERSearchBar
+import com.saadeh.easyrecipes.list.presentation.RecipeListViewModel
 import com.saadeh.easyrecipes.ui.theme.EasyRecipesTheme
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
 
 
 @Composable
-fun RecipeScreen(navHostController: NavHostController) {
-    var recipes by rememberSaveable { mutableStateOf<List<RecipeDto>>(emptyList()) }
-    val retrofit = RetrofitClient.retrofitInstance.create(ApiService::class.java)
-    if (recipes.isEmpty()) {
-        retrofit.getRandom().enqueue(object : Callback<RecipeResponse> {
-            override fun onResponse(
-                call: Call<RecipeResponse>,
-                response: Response<RecipeResponse>
-            ) {
-                if (response.isSuccessful) {
-                    recipes = response.body()?.recipes ?: emptyList()
-                } else {
-                    Log.d("RecipeScreen", "Request error :: ${response.errorBody()}")
-                }
-            }
-
-            override fun onFailure(call: Call<RecipeResponse>, t: Throwable) {
-                Log.d("RecipeScreen", "Network error :: ${t.message}")
-            }
-
-        })
-    }
+fun RecipeScreen(navHostController: NavHostController,
+                 viewModel: RecipeListViewModel) {
+    val recipes by viewModel.uiRecipeList.collectAsState()
 
     Surface(
         modifier = Modifier

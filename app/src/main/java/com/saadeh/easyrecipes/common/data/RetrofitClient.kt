@@ -1,5 +1,6 @@
-package com.saadeh.easyrecipes
+package com.saadeh.easyrecipes.common.data
 
+import com.saadeh.easyrecipes.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Retrofit

@@ -1,4 +1,4 @@
-package com.saadeh.easyrecipes
+package com.saadeh.easyrecipes.designsystem.components
 
 
 import androidx.compose.foundation.layout.fillMaxWidth
