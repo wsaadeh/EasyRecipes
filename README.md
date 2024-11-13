@@ -3,12 +3,10 @@ This project is a app Android Native with kotlin language. The main objective of
 
 ## :camera_flash: Screenshots
 <!-- You can add more screenshots here if you like -->
-<img src="https://github.com/user-attachments/assets/87773b49-f22c-4ad1-a130-c0dafe32909a" width=200/>
-<img src="https://github.com/user-attachments/assets/32707f3d-fd46-42f0-9fa8-15c816474d42" width=200/>
-![Uploading Screenshot_20241113_094257.png…]()
-
-
-
+<img src="https://github.com/user-attachments/assets/fdd22950-fc99-4c5f-8913-17786b58001d" width=200/>
+<img src="https://github.com/user-attachments/assets/13d08a54-ab72-453a-873c-4c8b26a4d7a8" width=200/>
+<img src="https://github.com/user-attachments/assets/33a05e2c-4764-4e9e-9b44-5818f3e6b0eb" width=200/>
+<img src="https://github.com/user-attachments/assets/63aca270-39d2-4f34-b469-98b7ff7edd75" width=200/>
 
 ## Tecnologias
 - Activity
