@@ -1,21 +1,21 @@
 package com.saadeh.easyrecipes.list.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.saadeh.easyrecipes.common.data.RetrofitClient
+import com.saadeh.easyrecipes.EasyRecipeApplication
 import com.saadeh.easyrecipes.common.model.RecipeDto
-import com.saadeh.easyrecipes.common.model.RecipeResponse
-import com.saadeh.easyrecipes.list.data.ListService
+import com.saadeh.easyrecipes.list.data.RecipeListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.net.UnknownHostException
 
 class RecipeListViewModel(
-    private val listService: ListService
+    private val repository: RecipeListRepository
 ) : ViewModel() {
     private val _uiRecipeList = MutableStateFlow<List<RecipeDto>>(emptyList())
     val uiRecipeList: StateFlow<List<RecipeDto>> = _uiRecipeList
@@ -26,12 +26,22 @@ class RecipeListViewModel(
 
     private fun fetchRecipeList() {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = listService.getRandom()
-            if (response.isSuccessful) {
+            val response = repository.getRecipeList()
+            if (response.isSuccess) {
                 _uiRecipeList.value =
-                    (response.body()?.recipes ?: emptyList())
+                    (response.getOrNull()?: emptyList())
             } else {
-                Log.d("RecipeScreen", "Request error :: ${response.errorBody()}")
+                val ex = response.exceptionOrNull()
+                if (ex is UnknownHostException){
+                    _uiRecipeList.value = listOf(
+                        RecipeDto(
+                            id = 0,
+                            title = "No internet Connection",
+                            image = "",
+                            summary = "No internet Connection"
+                        )
+                    )
+                }
             }
         }
     }
@@ -40,9 +50,10 @@ class RecipeListViewModel(
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val listService = RetrofitClient.retrofitInstance.create(ListService::class.java)
+
+                val application = checkNotNull(extras[APPLICATION_KEY])
                 return RecipeListViewModel(
-                    listService
+                    repository = (application as EasyRecipeApplication).repository
                 ) as T
             }
         }

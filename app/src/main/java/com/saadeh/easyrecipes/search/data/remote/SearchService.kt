@@ -1,4 +1,4 @@
-package com.saadeh.easyrecipes.search.data
+package com.saadeh.easyrecipes.search.data.remote
 
 import com.saadeh.easyrecipes.common.model.SearchRecipesResponse
 import retrofit2.Response
