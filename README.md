@@ -26,7 +26,7 @@ This project is a app Android Native with kotlin language. The main objective of
 - Log
 - Suspend routines
 - Launch
-- TMDB API
+- Spoonacular API
 - Okhttp3
 
 
